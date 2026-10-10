@@ -60,8 +60,9 @@ class AgentDoctor:
     Implements: Planning, Tool Use, State, Context, Execution, Recovery, Verification, Iteration.
     """
 
-    def __init__(self, repo_dir: str = "sample_target_repo"):
-        self.repo_dir = os.path.abspath(repo_dir)
+    def __init__(self, repo_dir: Optional[str] = None):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.repo_dir = os.path.abspath(repo_dir) if repo_dir else os.path.join(base_dir, "sample_target_repo")
         self.entire_manager = EntireCheckpointManager(self.repo_dir)
         self.state: Dict[str, Any] = {
             "status": "idle",

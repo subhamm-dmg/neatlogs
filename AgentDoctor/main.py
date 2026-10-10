@@ -2,6 +2,7 @@
 main.py - CLI Entry Point for AgentDoctor
 """
 
+import os
 import sys
 import argparse
 from agent import AgentDoctor
@@ -46,7 +47,8 @@ class RateLimiter:
         # BUG: missing self.last_refill = now
         return True, {"tokens_remaining": self.tokens, "lockouts": self.lockouts}
 '''
-    with open("sample_target_repo/service.py", "w", encoding="utf-8") as f:
+    target_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "sample_target_repo", "service.py")
+    with open(target_file, "w", encoding="utf-8") as f:
         f.write(buggy_code)
     print("🔄 [Reset] sample_target_repo/service.py has been reset to its buggy baseline state.")
 
