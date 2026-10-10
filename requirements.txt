@@ -1,0 +1,6 @@
+neatlogs>=1.1.8
+requests>=2.32.0
+groq>=1.0.0
+openai>=2.40.0
+python-dotenv>=1.2.0
+flask>=3.1.0

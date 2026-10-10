@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentDoctor · #neatHack AI Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0c10;
+      --bg-secondary: #12151c;
+      --bg-card: #181c26;
+      --border: #262c3d;
+      --text-main: #f0f3f6;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-glow: rgba(88, 166, 255, 0.15);
+      --success: #3fb950;
+      --danger: #f85149;
+      --warning: #d29922;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .badge-tag {
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    .sponsors {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .sponsor-pill {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .controls-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0d1117;
+    }
+    .btn-primary:hover {
+      background: #79c0ff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .pane {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .pane-header {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .pane.failure { border-left: 4px solid var(--danger); }
+    .pane.success { border-left: 4px solid var(--success); }
+
+    .code-box {
+      background: #06080b;
+      border: 1px solid #1f2430;
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: #c9d1d9;
+      overflow-x: auto;
+      max-height: 250px;
+      white-space: pre-wrap;
+    }
+
+    .waterfall-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .span-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.825rem;
+    }
+
+    .span-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+    }
+    .span-badge.success { background: rgba(63, 185, 80, 0.2); color: var(--success); }
+    .span-badge.failure { background: rgba(248, 81, 73, 0.2); color: var(--danger); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .kpi-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .kpi-label { font-size: 0.75rem; color: var(--text-muted); }
+    .kpi-value { font-size: 1.25rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      display: inline-block;
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="pulse-dot"></span>
+      <h1>AgentDoctor</h1>
+      <span class="badge-tag">#neatHack 2026</span>
+    </div>
+    <div class="sponsors">
+      <span class="sponsor-pill">Observability: <b>neatlogs</b></span>
+      <span class="sponsor-pill">Context: <b>Entire</b></span>
+      <span class="sponsor-pill">Economics: <b>cfo.ai</b></span>
+      <span class="sponsor-pill">Inference: <b>Groq / Ollama</b></span>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="controls-banner">
+      <div>
+        <h2 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Autonomous Bug Triage & Self-Healing Engine</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Monitors target microservices, traces execution faults in Neatlogs, and repairs code with Entire git context.</p>
+      </div>
+      <div class="btn-group">
+        <button id="btnReset" class="btn-secondary" onclick="resetTarget()">↺ Reset Buggy Code</button>
+        <button id="btnRun" class="btn-primary" onclick="runHealingCycle()">⚡ Run Autonomous Repair</button>
+      </div>
+    </div>
+
+    <div class="grid-layout">
+      <!-- Main Left Column -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        
+        <!-- Evidence Comparison Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🔍 Trace Evidence Comparison (Pre-Fix vs Post-Fix)</span>
+            <span id="cycleStatus" class="badge-tag">Ready</span>
+          </div>
+
+          <div class="comparison-grid">
+            <div class="pane failure">
+              <div class="pane-header">
+                <span style="color: var(--danger)">❌ Run Before Fix (Incident)</span>
+                <span id="failCode">Exit: 1</span>
+              </div>
+              <div class="code-box" id="failOutput">Press "Run Autonomous Repair" to execute the verification cycle...</div>
+            </div>
+
+            <div class="pane success">
+              <div class="pane-header">
+                <span style="color: var(--success)">✅ Run After Fix (Verified)</span>
+                <span id="passCode">Exit: 0</span>
+              </div>
+              <div class="code-box" id="passOutput">Awaiting repair verification...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Neatlogs Spans Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📊 Neatlogs Telemetry & Span Waterfall</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);" id="spanCount">0 spans recorded</span>
+          </div>
+          <div class="waterfall-list" id="waterfallList">
+            <div style="color: var(--text-muted); font-size: 0.85rem; padding: 1rem; text-align: center;">No active spans. Click "Run Autonomous Repair".</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Sidebar Column -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        
+        <!-- cfo.ai Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">💼 cfo.ai Unit Economics</span>
+            <span class="badge-tag" style="background: rgba(63, 185, 80, 0.15); color: var(--success); border-color: rgba(63, 185, 80, 0.3);">Growth Tier</span>
+          </div>
+          <div class="kpi-grid">
+            <div class="kpi-box">
+              <span class="kpi-label">Gross Margin</span>
+              <span class="kpi-value" id="kpiMargin" style="color: var(--success)">99.4%</span>
+            </div>
+            <div class="kpi-box">
+              <span class="kpi-label">Customer ROI</span>
+              <span class="kpi-value" id="kpiRoi">39.6x</span>
+            </div>
+            <div class="kpi-box">
+              <span class="kpi-label">Cost Per Patch</span>
+              <span class="kpi-value" id="kpiCost">$0.017</span>
+            </div>
+            <div class="kpi-box">
+              <span class="kpi-label">Monthly MRR</span>
+              <span class="kpi-value" id="kpiMrr">$74,950</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Entire Checkpoints Card -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🌿 Entire Checkpoints</span>
+            <span id="chkCount" style="font-size: 0.75rem; color: var(--text-muted);">0 checkpoints</span>
+          </div>
+          <div id="checkpointsList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 250px; overflow-y: auto;">
+            <div style="color: var(--text-muted); font-size: 0.85rem; padding: 0.5rem;">Awaiting session commits...</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    #neatHack 2026 AI Agent Hackathon Submission · Built with Neatlogs, Entire, and cfo.ai
+  </footer>
+
+  <script>
+    async function runHealingCycle() {
+      const btn = document.getElementById('btnRun');
+      btn.disabled = true;
+      btn.innerText = '⚙️ Running Repair Cycle...';
+      document.getElementById('cycleStatus').innerText = 'Analyzing...';
+
+      try {
+        const res = await fetch('/api/run');
+        const data = await res.json();
+        
+        document.getElementById('cycleStatus').innerText = data.status === 'RESOLVED' ? 'Repaired & Verified' : 'Failed';
+        document.getElementById('failOutput').innerText = data.initial_failure.output || 'No error';
+        document.getElementById('passOutput').innerText = data.verified_success ? data.verified_success.output : 'Fix verification output...';
+
+        // Render Waterfall
+        const list = document.getElementById('waterfallList');
+        list.innerHTML = '';
+        data.telemetry_spans.forEach(s => {
+          const div = document.createElement('div');
+          div.className = 'span-item';
+          div.innerHTML = `
+            <div>
+              <b>${s.name}</b>
+              <span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 0.5rem;">[${s.node_type}]</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">${s.duration_ms}ms</span>
+              <span class="span-badge ${s.status === 'SUCCESS' ? 'success' : 'failure'}">${s.status}</span>
+            </div>
+          `;
+          list.appendChild(div);
+        });
+        document.getElementById('spanCount').innerText = `${data.telemetry_spans.length} spans recorded`;
+
+        // Render Checkpoints
+        const chkList = document.getElementById('checkpointsList');
+        chkList.innerHTML = '';
+        data.checkpoints.forEach(c => {
+          const div = document.createElement('div');
+          div.style = 'background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; font-size: 0.75rem;';
+          div.innerHTML = `
+            <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); color: var(--accent);">
+              <span>${c.checkpoint_id}</span>
+              <span>${c.action}</span>
+            </div>
+            <div style="color: var(--text-muted); margin-top: 0.25rem;">${c.rationale}</div>
+          `;
+          chkList.appendChild(div);
+        });
+        document.getElementById('chkCount').innerText = `${data.checkpoints.length} checkpoints`;
+
+      } catch (err) {
+        alert('Error executing healing cycle: ' + err);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '⚡ Run Autonomous Repair';
+      }
+    }
+
+    async function resetTarget() {
+      await fetch('/api/reset');
+      document.getElementById('failOutput').innerText = 'Reset to buggy baseline. Ready for reproduction run.';
+      document.getElementById('passOutput').innerText = 'Awaiting repair verification...';
+      document.getElementById('cycleStatus').innerText = 'Baseline Reset';
+      alert('Target service reset to buggy state!');
+    }
+  </script>
+</body>
+</html>
