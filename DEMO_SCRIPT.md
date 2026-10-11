@@ -61,9 +61,9 @@ Autonomous bug triage, failure reproduction & self-healing agent platform:
 💼 Economics: @cfo_ai unit economics ($0.017/patch, 99.6% margin, 39.6x ROI)
 
 👥 Team: Team Antigravity
-📦 Repo: <YOUR_PUBLIC_GITHUB_REPO_URL>
+📦 Repo: https://github.com/subhamm-dmg/neatlogs
 🎥 Demo Video (3m): <YOUR_YOUTUBE_OR_LOOM_LINK>
-📄 Business Plan: <LINK_TO_BUSINESS_PLAN.md>
+📄 Business Plan: https://github.com/subhamm-dmg/neatlogs/blob/main/BUSINESS_PLAN.md
 
 #AI #AIagents #Observability #OpenSource
 ```
