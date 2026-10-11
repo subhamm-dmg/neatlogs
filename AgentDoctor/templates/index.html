@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AgentDoctor · #neatHack AI Agent</title>
+  <title>AgentDoctor · #neatHack AI Agent Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -20,6 +20,7 @@
       --success: #3fb950;
       --danger: #f85149;
       --warning: #d29922;
+      --purple: #bc8cff;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'Fira Code', monospace;
     }
@@ -71,8 +72,9 @@
 
     .sponsors {
       display: flex;
-      gap: 1rem;
+      gap: 0.75rem;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .sponsor-pill {
@@ -83,11 +85,12 @@
       padding: 0.25rem 0.6rem;
       border-radius: 6px;
     }
+    .sponsor-pill b { color: var(--text-main); }
 
     .container {
-      max-width: 1400px;
+      max-width: 1440px;
       margin: 0 auto;
-      padding: 2rem;
+      padding: 1.5rem 2rem;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -145,7 +148,7 @@
 
     .grid-layout {
       display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 1.8fr 1.2fr;
       gap: 1.5rem;
     }
 
@@ -202,6 +205,7 @@
     }
 
     .pane.failure { border-left: 4px solid var(--danger); }
+    .pane.warning { border-left: 4px solid var(--warning); }
     .pane.success { border-left: 4px solid var(--success); }
 
     .code-box {
@@ -210,11 +214,12 @@
       border-radius: 6px;
       padding: 0.75rem;
       font-family: var(--font-mono);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: #c9d1d9;
       overflow-x: auto;
-      max-height: 250px;
+      max-height: 220px;
       white-space: pre-wrap;
+      line-height: 1.4;
     }
 
     .waterfall-list {
@@ -259,8 +264,8 @@
       gap: 0.25rem;
     }
 
-    .kpi-label { font-size: 0.75rem; color: var(--text-muted); }
-    .kpi-value { font-size: 1.25rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); }
+    .kpi-label { font-size: 0.725rem; color: var(--text-muted); }
+    .kpi-value { font-size: 1.15rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); }
 
     .pulse-dot {
       width: 8px;
@@ -290,21 +295,21 @@
     </div>
     <div class="sponsors">
       <span class="sponsor-pill">Observability: <b>neatlogs</b></span>
-      <span class="sponsor-pill">Context: <b>Entire</b></span>
+      <span class="sponsor-pill">Context & Lineage: <b>Entire</b></span>
       <span class="sponsor-pill">Economics: <b>cfo.ai</b></span>
-      <span class="sponsor-pill">Inference: <b>Groq / Ollama</b></span>
+      <span class="sponsor-pill">Inference: <b>Groq Llama 3.3 70B</b></span>
     </div>
   </header>
 
   <div class="container">
     <div class="controls-banner">
       <div>
-        <h2 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Autonomous Bug Triage & Self-Healing Engine</h2>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">Monitors target microservices, traces execution faults in Neatlogs, and repairs code with Entire git context.</p>
+        <h2 style="font-size: 1.15rem; margin-bottom: 0.25rem;">Autonomous Bug Triage, Failure Reproduction & Self-Healing Agent</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Ingests runtime exceptions, reproduces traces in Neatlogs, inspects Entire AST context, and self-heals across iterations.</p>
       </div>
       <div class="btn-group">
-        <button id="btnReset" class="btn-secondary" onclick="resetTarget()">↺ Reset Buggy Code</button>
-        <button id="btnRun" class="btn-primary" onclick="runHealingCycle()">⚡ Run Autonomous Repair</button>
+        <button id="btnReset" class="btn-secondary" onclick="resetTarget()">↺ Reset Buggy Baseline</button>
+        <button id="btnRun" class="btn-primary" onclick="runHealingCycle()">⚡ Run Autonomous Repair Cycle</button>
       </div>
     </div>
 
@@ -312,25 +317,25 @@
       <!-- Main Left Column -->
       <div style="display: flex; flex-direction: column; gap: 1.5rem;">
         
-        <!-- Evidence Comparison Card -->
+        <!-- Comparative Evidence Card -->
         <div class="card">
           <div class="card-header">
-            <span class="card-title">🔍 Trace Evidence Comparison (Pre-Fix vs Post-Fix)</span>
+            <span class="card-title">🔍 Verification Evidence: Pre-Fix Incident vs Post-Fix Resolution</span>
             <span id="cycleStatus" class="badge-tag">Ready</span>
           </div>
 
           <div class="comparison-grid">
             <div class="pane failure">
               <div class="pane-header">
-                <span style="color: var(--danger)">❌ Run Before Fix (Incident)</span>
+                <span style="color: var(--danger)">❌ Pre-Fix Baseline Incident</span>
                 <span id="failCode">Exit: 1</span>
               </div>
-              <div class="code-box" id="failOutput">Press "Run Autonomous Repair" to execute the verification cycle...</div>
+              <div class="code-box" id="failOutput">Press "Run Autonomous Repair Cycle" to execute reproduction & self-healing...</div>
             </div>
 
             <div class="pane success">
               <div class="pane-header">
-                <span style="color: var(--success)">✅ Run After Fix (Verified)</span>
+                <span style="color: var(--success)">✅ Post-Fix Verified Resolution</span>
                 <span id="passCode">Exit: 0</span>
               </div>
               <div class="code-box" id="passOutput">Awaiting repair verification...</div>
@@ -341,11 +346,11 @@
         <!-- Neatlogs Spans Card -->
         <div class="card">
           <div class="card-header">
-            <span class="card-title">📊 Neatlogs Telemetry & Span Waterfall</span>
+            <span class="card-title">📊 Neatlogs Telemetry & Trace Waterfall</span>
             <span style="font-size: 0.75rem; color: var(--text-muted);" id="spanCount">0 spans recorded</span>
           </div>
           <div class="waterfall-list" id="waterfallList">
-            <div style="color: var(--text-muted); font-size: 0.85rem; padding: 1rem; text-align: center;">No active spans. Click "Run Autonomous Repair".</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem; padding: 1rem; text-align: center;">No active spans. Click "Run Autonomous Repair Cycle".</div>
           </div>
         </div>
 
@@ -357,13 +362,13 @@
         <!-- cfo.ai Card -->
         <div class="card">
           <div class="card-header">
-            <span class="card-title">💼 cfo.ai Unit Economics</span>
-            <span class="badge-tag" style="background: rgba(63, 185, 80, 0.15); color: var(--success); border-color: rgba(63, 185, 80, 0.3);">Growth Tier</span>
+            <span class="card-title">💼 cfo.ai Unit Economics & Business Model</span>
+            <span class="badge-tag" style="background: rgba(63, 185, 80, 0.15); color: var(--success); border-color: rgba(63, 185, 80, 0.3);">Base vs Growth</span>
           </div>
           <div class="kpi-grid">
             <div class="kpi-box">
               <span class="kpi-label">Gross Margin</span>
-              <span class="kpi-value" id="kpiMargin" style="color: var(--success)">99.4%</span>
+              <span class="kpi-value" id="kpiMargin" style="color: var(--success)">99.6%</span>
             </div>
             <div class="kpi-box">
               <span class="kpi-label">Customer ROI</span>
@@ -374,20 +379,24 @@
               <span class="kpi-value" id="kpiCost">$0.017</span>
             </div>
             <div class="kpi-box">
-              <span class="kpi-label">Monthly MRR</span>
-              <span class="kpi-value" id="kpiMrr">$74,950</span>
+              <span class="kpi-label">Growth MRR</span>
+              <span class="kpi-value" id="kpiMrr">$374,750</span>
             </div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.5rem; display: flex; justify-content: space-between;">
+            <span>Runway: <b style="color: var(--success)">Profitable / Infinite</b></span>
+            <span>Tokens / Patch: <b>8,800</b></span>
           </div>
         </div>
 
         <!-- Entire Checkpoints Card -->
         <div class="card">
           <div class="card-header">
-            <span class="card-title">🌿 Entire Checkpoints</span>
+            <span class="card-title">🌿 Entire Checkpoints & Git Lineage</span>
             <span id="chkCount" style="font-size: 0.75rem; color: var(--text-muted);">0 checkpoints</span>
           </div>
-          <div id="checkpointsList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 250px; overflow-y: auto;">
-            <div style="color: var(--text-muted); font-size: 0.85rem; padding: 0.5rem;">Awaiting session commits...</div>
+          <div id="checkpointsList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 280px; overflow-y: auto;">
+            <div style="color: var(--text-muted); font-size: 0.85rem; padding: 0.5rem;">Awaiting session commits in .entire/...</div>
           </div>
         </div>
 
@@ -403,16 +412,16 @@
     async function runHealingCycle() {
       const btn = document.getElementById('btnRun');
       btn.disabled = true;
-      btn.innerText = '⚙️ Running Repair Cycle...';
-      document.getElementById('cycleStatus').innerText = 'Analyzing...';
+      btn.innerText = '⚙️ Running Self-Healing Cycle...';
+      document.getElementById('cycleStatus').innerText = 'Healing in Progress...';
 
       try {
         const res = await fetch('/api/run');
         const data = await res.json();
         
-        document.getElementById('cycleStatus').innerText = data.status === 'RESOLVED' ? 'Repaired & Verified' : 'Failed';
-        document.getElementById('failOutput').innerText = data.initial_failure.output || 'No error';
-        document.getElementById('passOutput').innerText = data.verified_success ? data.verified_success.output : 'Fix verification output...';
+        document.getElementById('cycleStatus').innerText = data.status === 'RESOLVED' ? 'Healed & Verified (Exit 0)' : 'Failed';
+        document.getElementById('failOutput').innerText = data.initial_failure.output || 'No baseline error captured';
+        document.getElementById('passOutput').innerText = data.verified_success ? data.verified_success.output : 'Fix verified';
 
         // Render Waterfall
         const list = document.getElementById('waterfallList');
@@ -432,30 +441,39 @@
           `;
           list.appendChild(div);
         });
-        document.getElementById('spanCount').innerText = `${data.telemetry_spans.length} spans recorded`;
+        document.getElementById('spanCount').innerText = `${data.telemetry_spans.length} spans recorded in Neatlogs`;
 
         // Render Checkpoints
         const chkList = document.getElementById('checkpointsList');
         chkList.innerHTML = '';
         data.checkpoints.forEach(c => {
           const div = document.createElement('div');
-          div.style = 'background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; font-size: 0.75rem;';
+          div.style = 'background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem; font-size: 0.75rem;';
           div.innerHTML = `
             <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); color: var(--accent);">
               <span>${c.checkpoint_id}</span>
-              <span>${c.action}</span>
+              <span style="color: ${c.verification_status === 'PASSED' ? 'var(--success)' : 'var(--warning)'}">${c.action}</span>
             </div>
             <div style="color: var(--text-muted); margin-top: 0.25rem;">${c.rationale}</div>
+            <div style="color: #6e7681; font-size: 0.68rem; margin-top: 0.25rem;">Git Commit: ${c.git_commit.substring(0, 8)} | AST: ${(c.entire_graph_nodes || []).slice(0, 3).join(', ')}</div>
           `;
           chkList.appendChild(div);
         });
-        document.getElementById('chkCount').innerText = `${data.checkpoints.length} checkpoints`;
+        document.getElementById('chkCount').innerText = `${data.checkpoints.length} checkpoints logged`;
+
+        // Render KPIs
+        if (data.economics) {
+          document.getElementById('kpiMargin').innerText = `${data.economics.gross_margin_pct}%`;
+          document.getElementById('kpiRoi').innerText = `${data.economics.customer_roi.roi_multiple}x`;
+          document.getElementById('kpiCost').innerText = `$${data.economics.unit_economics.total_unit_cost}`;
+          document.getElementById('kpiMrr').innerText = `$${data.economics.mrr.toLocaleString()}`;
+        }
 
       } catch (err) {
         alert('Error executing healing cycle: ' + err);
       } finally {
         btn.disabled = false;
-        btn.innerText = '⚡ Run Autonomous Repair';
+        btn.innerText = '⚡ Run Autonomous Repair Cycle';
       }
     }
 

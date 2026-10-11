@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791689115255",
+  "timestamp": "2026-10-11T03:25:15.255455Z",
+  "action": "triage_incident",
+  "rationale": "Reproduced rate limiter failure; captured baseline trace in Neatlogs",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "FAILED",
+  "diff": "",
+  "git_commit": "c1756c0351490bfd0547c661cf918f9c44e244ec",
+  "entire_graph_nodes": [
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "run_agent",
+    "reset_service",
+    "get_economics"
+  ]
+}

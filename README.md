@@ -99,15 +99,14 @@ neatlogs/
 
 ## 🚀 How to Run
 
-### Step 1: Clone and Set Up Environment
+### Step 1: Set Up Environment
 ```bash
-cd /Users/sumukhmg/Desktop/neatlogs
+# Automated setup (creates clean virtualenv & installs all dependencies):
+./setup.sh
 
-# Create and activate virtual environment (if not already active)
+# Or manually:
 python3 -m venv .venv
 source .venv/bin/activate
-
-# Install dependencies
 pip install -r AgentDoctor/requirements.txt
 ```
 
