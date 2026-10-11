@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791692158316",
+  "timestamp": "2026-10-11T04:15:58.316792Z",
+  "action": "verify_and_resolve",
+  "rationale": "Verified green across test suite for schema_mismatch",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "PASSED",
+  "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,6 +1,6 @@\n \"\"\"\n sample_target_repo/service.py - Agent Tool Payload Normalizer\n-[ATTEMPT 1 PATCH - Handled nested result but missed default fallback for total]\n+[VERIFIED RESOLUTION - Robust normalization with polymorphic schema support]\n \"\"\"\n \n from typing import Dict, Any, List\n@@ -8,12 +8,27 @@\n \n class ToolDataParser:\n     def normalize_payload(self, raw_response: Dict[str, Any]) -> Dict[str, Any]:\n-        data = raw_response.get(\"data\") or raw_response.get(\"result\", {})\n-        items = data.get(\"items\") or data.get(\"records\") or []\n-        # Flawed: Still hard-indexes raw_response[\"total\"] which causes KeyError when omitted!\n-        total_count = raw_response[\"total\"]\n-        \n-        processed = [{\"id\": item.get(\"id\"), \"value\": item.get(\"val\", item.get(\"value\", 0))} for item in items]\n+        if not isinstance(raw_response, dict):\n+            return {\"status\": \"error\", \"count\": 0, \"total_reported\": 0, \"records\": []}\n+\n+        # Resolve payload container across both legacy ('data') and modern ('result') shapes\n+        data = raw_response.get(\"data\") if isinstance(raw_response.get(\"data\"), dict) else raw_response.get(\"result\", {})\n+        if not isinstance(data, dict):\n+            items = []\n+        else:\n+            items = data.get(\"items\") or data.get(\"records\") or []\n+\n+        if not isinstance(items, list):\n+            items = []\n+\n+        # Graceful fallback for total count\n+        total_count = raw_response.get(\"total\", data.get(\"total_count\", len(items)))\n+\n+        processed = [\n+            {\"id\": item.get(\"id\", idx), \"value\": item.get(\"val\", item.get(\"value\", 0))}\n+            for idx, item in enumerate(items) if isinstance(item, dict)\n+        ]\n+\n         return {\n             \"status\": \"success\",\n             \"count\": len(processed),",
+  "git_commit": "19968beb4c8d6babc151bc7721576ce8ebcf0b2e",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "list_scenarios"
+  ]
+}

@@ -1,5 +1,6 @@
 """
 main.py - CLI Entry Point for AgentDoctor (#neatHack)
+Supports Multi-Agent Swarm execution and selectable incident benchmarks.
 """
 
 import os
@@ -14,61 +15,34 @@ if current_dir not in sys.path:
 
 from agent import AgentDoctor
 from cfo_model import get_comparative_scenarios, generate_business_plan_markdown
+from scenarios import load_scenario, get_available_scenarios
 
 
-def reset_repo():
-    buggy_code = '''"""
-sample_target_repo/service.py
-Target service monitored by AgentDoctor: Token Bucket Rate Limiter with burst window.
-"""
-
-import time
-from typing import Dict, Tuple
-
-
-class RateLimiter:
-    """
-    Token-bucket rate limiter.
-    BUG: The refill calculation fails to update last_refill_timestamp correctly
-    when capacity is exceeded, causing sudden zero-token lockouts or runaway refills under burst traffic!
-    """
-
-    def __init__(self, rate_per_second: float = 10.0, capacity: int = 20):
-        self.rate = rate_per_second
-        self.capacity = capacity
-        self.tokens: float = float(capacity)
-        self.last_refill = time.time()
-        self.lockouts = 0
-
-    def allow_request(self, tokens_needed: int = 1) -> Tuple[bool, Dict[str, float]]:
-        now = time.time()
-        elapsed = now - self.last_refill
-        refill = elapsed * self.rate
-        self.tokens = min(float(self.capacity), self.tokens + refill)
-        
-        if self.tokens < tokens_needed:
-            self.lockouts += 1
-            return False, {"tokens_remaining": self.tokens, "lockouts": self.lockouts}
-
-        self.tokens -= tokens_needed
-        # BUG: missing self.last_refill = now on burst consumption!
-        return True, {"tokens_remaining": self.tokens, "lockouts": self.lockouts}
-'''
-    target_file = os.path.join(current_dir, "sample_target_repo", "service.py")
-    with open(target_file, "w", encoding="utf-8") as f:
-        f.write(buggy_code)
-    print("🔄 [Reset] sample_target_repo/service.py has been reset to its buggy baseline state.")
+def reset_repo(scenario_id: str = "rate_limiter"):
+    target_dir = os.path.join(current_dir, "sample_target_repo")
+    sc = load_scenario(scenario_id, target_dir)
+    print(f"🔄 [Reset] sample_target_repo/ has been reset to baseline for: {sc['title']} ({sc['category']})")
 
 
 def main():
-    parser = argparse.ArgumentParser(description="AgentDoctor - Autonomous Bug Triage & Self-Healing Agent")
-    parser.add_argument("--run", action="store_true", help="Execute the autonomous healing cycle")
-    parser.add_argument("--reset", action="store_true", help="Reset target repo to buggy baseline")
+    parser = argparse.ArgumentParser(description="AgentDoctor - Autonomous Multi-Agent Bug Triage & Self-Healing Platform")
+    parser.add_argument("--run", action="store_true", help="Execute the autonomous multi-agent healing cycle")
+    parser.add_argument("--scenario", type=str, default="rate_limiter", choices=["rate_limiter", "schema_mismatch", "cache_leak"],
+                        help="Select incident benchmark: rate_limiter | schema_mismatch | cache_leak")
+    parser.add_argument("--list-scenarios", action="store_true", help="List all available production benchmark scenarios")
+    parser.add_argument("--reset", action="store_true", help="Reset target repo to buggy baseline for scenario")
     parser.add_argument("--economics", action="store_true", help="Generate BUSINESS_PLAN.md & print cfo.ai financial scenarios")
     args = parser.parse_args()
 
+    if args.list_scenarios:
+        print("\n📋 Available Production Benchmark Scenarios:")
+        for s in get_available_scenarios():
+            print(f"  • {s['id']}: {s['title']} [{s['category']}]")
+            print(f"    {s['description']}\n")
+        return
+
     if args.reset:
-        reset_repo()
+        reset_repo(args.scenario)
         return
 
     if args.economics:
@@ -78,10 +52,20 @@ def main():
         print(json.dumps(get_comparative_scenarios(), indent=2))
         return
 
-    # Default action: reset baseline and run healing cycle
-    reset_repo()
+    # Default action: reset baseline and run multi-agent swarm
+    reset_repo(args.scenario)
     doctor = AgentDoctor()
-    doctor.run_healing_cycle()
+    results = doctor.run_healing_cycle(scenario_id=args.scenario)
+    print("\nFinal Results Summary:")
+    print(json.dumps({
+        "scenario": results["scenario"]["title"],
+        "status": results["status"],
+        "attempts_to_heal": results["attempts"],
+        "neatlogs_spans": len(results["telemetry_spans"]),
+        "entire_checkpoints": len(results["checkpoints"]),
+        "gross_margin": f"{results['economics']['gross_margin_pct']}%",
+        "customer_roi": f"{results['economics']['customer_roi']['roi_multiple']}x"
+    }, indent=2))
 
 
 if __name__ == "__main__":

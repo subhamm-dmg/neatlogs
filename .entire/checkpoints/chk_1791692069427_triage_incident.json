@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791692069427",
+  "timestamp": "2026-10-11T04:14:29.427766Z",
+  "action": "triage_incident",
+  "rationale": "Context mapped for TimingDrift: \u274c test_burst_refill_and_continuity: FAILED -> CRITICAL DRIFT BUG: Request for 2 tokens was granted (tokens_remaining=4.204272270202637) because last_refill was not advanced properly!",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "FAILED",
+  "diff": "",
+  "git_commit": "19968beb4c8d6babc151bc7721576ce8ebcf0b2e",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "run_agent"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791692158233",
+  "timestamp": "2026-10-11T04:15:58.233650Z",
+  "action": "triage_incident",
+  "rationale": "Context mapped for KeyError: \u274c test_modern_nested_schema_with_records: FAILED -> KeyError: 'data'",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "FAILED",
+  "diff": "",
+  "git_commit": "19968beb4c8d6babc151bc7721576ce8ebcf0b2e",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "list_scenarios"
+  ]
+}

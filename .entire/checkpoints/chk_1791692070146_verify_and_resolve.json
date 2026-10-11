@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791692070146",
+  "timestamp": "2026-10-11T04:14:30.146482Z",
+  "action": "verify_and_resolve",
+  "rationale": "Verified green across test suite for rate_limiter",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "PASSED",
+  "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,6 +1,6 @@\n \"\"\"\n sample_target_repo/service.py - Token Bucket Rate Limiter\n-[ATTEMPT 1 PATCH - Naive update before elapsed calculation]\n+[VERIFIED RESOLUTION - Synchronized timestamp advancement and capacity clamping]\n \"\"\"\n \n import time\n@@ -17,11 +17,12 @@\n \n     def allow_request(self, tokens_needed: int = 1) -> Tuple[bool, Dict[str, float]]:\n         now = time.time()\n-        # Flawed: last_refill updated before computing elapsed results in elapsed = 0!\n-        self.last_refill = now\n         elapsed = max(0.0, now - self.last_refill)\n+        \n+        # Accurately compute replenished tokens based on elapsed interval\n         refill = elapsed * self.rate\n         self.tokens = min(self.capacity, self.tokens + refill)\n+        self.last_refill = now\n \n         if self.tokens < tokens_needed:\n             self.lockouts += 1",
+  "git_commit": "19968beb4c8d6babc151bc7721576ce8ebcf0b2e",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "run_agent"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791692084863",
+  "timestamp": "2026-10-11T04:14:44.863150Z",
+  "action": "attempt_1_refinement",
+  "rationale": "Attempt 1 caught regression in QA suite; triggering recovery",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "FAILED",
+  "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,6 +1,6 @@\n \"\"\"\n sample_target_repo/service.py - In-Memory Session Cache\n-BUG: Fails to evict expired TTL items or cap max capacity, causing memory leak and stale reads.\n+[ATTEMPT 1 PATCH - Handled TTL check on read but missed LRU max capacity eviction]\n \"\"\"\n \n import time\n@@ -8,21 +8,26 @@\n \n \n class SessionCache:\n-    \"\"\"Session cache with TTL expiration and bounded capacity.\"\"\"\n-\n     def __init__(self, max_entries: int = 5, default_ttl_sec: float = 0.2):\n         self.max_entries = max_entries\n         self.default_ttl = default_ttl_sec\n         self.store: Dict[str, Any] = {}\n-        # BUG: Missing timestamps mapping for eviction and missing capacity check!\n+        self.expiry: Dict[str, float] = {}\n \n     def set(self, key: str, value: Any, ttl: Optional[float] = None) -> None:\n-        # BUG: Memory leak - continuously appends without respecting max_entries\n+        # Flawed: Still doesn't evict oldest entries when size exceeds max_entries!\n+        effective_ttl = ttl if ttl is not None else self.default_ttl\n         self.store[key] = value\n+        self.expiry[key] = time.time() + effective_ttl\n \n     def get(self, key: str) -> Optional[Any]:\n-        # BUG: Stale read - returns expired entries indefinitely!\n-        return self.store.get(key)\n+        if key in self.store:\n+            if time.time() > self.expiry.get(key, 0):\n+                del self.store[key]\n+                del self.expiry[key]\n+                return None\n+            return self.store[key]\n+        return None\n \n     def size(self) -> int:\n         return len(self.store)",
+  "git_commit": "19968beb4c8d6babc151bc7721576ce8ebcf0b2e",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "run_agent"
+  ]
+}

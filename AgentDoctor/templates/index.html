@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AgentDoctor · #neatHack AI Agent Platform</title>
+  <title>AgentDoctor · Multi-Agent Self-Healing Platform (#neatHack)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -38,7 +38,7 @@
     header {
       background: var(--bg-secondary);
       border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
+      padding: 0.85rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -72,7 +72,7 @@
 
     .sponsors {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.6rem;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -82,48 +82,71 @@
       color: var(--text-muted);
       border: 1px solid var(--border);
       background: var(--bg-card);
-      padding: 0.25rem 0.6rem;
+      padding: 0.25rem 0.55rem;
       border-radius: 6px;
     }
     .sponsor-pill b { color: var(--text-main); }
 
     .container {
-      max-width: 1440px;
+      max-width: 1480px;
       margin: 0 auto;
       padding: 1.5rem 2rem;
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
 
+    /* Controls Bar */
     .controls-banner {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.25rem 1.75rem;
+      padding: 1.15rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
       box-shadow: 0 4px 20px rgba(0,0,0,0.25);
     }
 
+    .selector-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    select {
+      background: var(--bg-secondary);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+    }
+    select:focus { border-color: var(--accent); }
+
     .btn-group {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.65rem;
     }
 
     button {
       cursor: pointer;
       font-family: var(--font-sans);
       font-weight: 600;
-      font-size: 0.875rem;
-      padding: 0.65rem 1.25rem;
+      font-size: 0.85rem;
+      padding: 0.6rem 1.15rem;
       border-radius: 8px;
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
       border: none;
     }
 
@@ -146,20 +169,53 @@
       background: rgba(255,255,255,0.05);
     }
 
+    /* Swarm Status Bar */
+    .swarm-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+    }
+
+    .agent-tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .agent-tile.active { border-color: var(--accent); }
+    .agent-tile.active::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent);
+    }
+
+    .agent-title { font-size: 0.825rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+    .agent-desc { font-size: 0.7rem; color: var(--text-muted); line-height: 1.25; }
+    .agent-badge { font-family: var(--font-mono); font-size: 0.68rem; margin-top: 0.25rem; align-self: flex-start; padding: 0.1rem 0.4rem; border-radius: 4px; }
+    .agent-badge.ready { background: rgba(139, 148, 158, 0.15); color: var(--text-muted); }
+    .agent-badge.success { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+
+    /* Layout */
     .grid-layout {
       display: grid;
       grid-template-columns: 1.8fr 1.2fr;
-      gap: 1.5rem;
+      gap: 1.25rem;
     }
 
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.25rem;
+      padding: 1.15rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.85rem;
     }
 
     .card-header {
@@ -167,11 +223,11 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 0.75rem;
+      padding-bottom: 0.65rem;
     }
 
     .card-title {
-      font-size: 0.95rem;
+      font-size: 0.925rem;
       font-weight: 600;
       color: var(--text-main);
       display: flex;
@@ -182,21 +238,21 @@
     .comparison-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
+      gap: 0.85rem;
     }
 
     .pane {
       background: var(--bg-secondary);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1rem;
+      padding: 0.85rem;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.45rem;
     }
 
     .pane-header {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -205,7 +261,6 @@
     }
 
     .pane.failure { border-left: 4px solid var(--danger); }
-    .pane.warning { border-left: 4px solid var(--warning); }
     .pane.success { border-left: 4px solid var(--success); }
 
     .code-box {
@@ -214,10 +269,10 @@
       border-radius: 6px;
       padding: 0.75rem;
       font-family: var(--font-mono);
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       color: #c9d1d9;
       overflow-x: auto;
-      max-height: 220px;
+      max-height: 200px;
       white-space: pre-wrap;
       line-height: 1.4;
     }
@@ -225,47 +280,73 @@
     .waterfall-list {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.45rem;
+      max-height: 240px;
+      overflow-y: auto;
     }
 
     .span-item {
       background: var(--bg-secondary);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 0.6rem 0.85rem;
+      padding: 0.55rem 0.8rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.825rem;
+      font-size: 0.8rem;
     }
 
     .span-badge {
       font-family: var(--font-mono);
-      font-size: 0.7rem;
-      padding: 0.15rem 0.45rem;
+      font-size: 0.68rem;
+      padding: 0.15rem 0.4rem;
       border-radius: 4px;
     }
     .span-badge.success { background: rgba(63, 185, 80, 0.2); color: var(--success); }
     .span-badge.failure { background: rgba(248, 81, 73, 0.2); color: var(--danger); }
 
+    /* cfo.ai Dynamic Sandbox */
+    .slider-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
     .kpi-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
+      gap: 0.65rem;
     }
 
     .kpi-box {
       background: var(--bg-secondary);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.75rem;
+      padding: 0.7rem;
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.2rem;
     }
 
-    .kpi-label { font-size: 0.725rem; color: var(--text-muted); }
-    .kpi-value { font-size: 1.15rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); }
+    .kpi-label { font-size: 0.7rem; color: var(--text-muted); }
+    .kpi-value { font-size: 1.1rem; font-weight: 700; color: var(--text-main); font-family: var(--font-mono); }
 
     .pulse-dot {
       width: 8px;
@@ -276,13 +357,50 @@
       box-shadow: 0 0 8px var(--success);
     }
 
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .modal-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
     footer {
       margin-top: auto;
       border-top: 1px solid var(--border);
-      padding: 1.5rem;
+      padding: 1.25rem;
       text-align: center;
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
     }
   </style>
 </head>
@@ -291,31 +409,66 @@
     <div class="brand">
       <span class="pulse-dot"></span>
       <h1>AgentDoctor</h1>
-      <span class="badge-tag">#neatHack 2026</span>
+      <span class="badge-tag">Multi-Agent Swarm · #neatHack</span>
     </div>
     <div class="sponsors">
       <span class="sponsor-pill">Observability: <b>neatlogs</b></span>
-      <span class="sponsor-pill">Context & Lineage: <b>Entire</b></span>
+      <span class="sponsor-pill">Context & AST: <b>Entire</b></span>
       <span class="sponsor-pill">Economics: <b>cfo.ai</b></span>
-      <span class="sponsor-pill">Inference: <b>Groq Llama 3.3 70B</b></span>
+      <span class="sponsor-pill">Engine: <b>Groq Llama 3.3 70B</b></span>
     </div>
   </header>
 
   <div class="container">
+    <!-- Top Control Banner -->
     <div class="controls-banner">
-      <div>
-        <h2 style="font-size: 1.15rem; margin-bottom: 0.25rem;">Autonomous Bug Triage, Failure Reproduction & Self-Healing Agent</h2>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">Ingests runtime exceptions, reproduces traces in Neatlogs, inspects Entire AST context, and self-heals across iterations.</p>
+      <div class="selector-group">
+        <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Select Incident Benchmark:</label>
+        <select id="scenarioSelect" onchange="changeScenario()">
+          <option value="rate_limiter">⚡ Concurrency: Token Bucket Timestamp Drift</option>
+          <option value="schema_mismatch">🔌 API: Agent Tool Schema Mismatch</option>
+          <option value="cache_leak">💾 Resources: Unbounded Cache Memory Leak</option>
+        </select>
       </div>
       <div class="btn-group">
-        <button id="btnReset" class="btn-secondary" onclick="resetTarget()">↺ Reset Buggy Baseline</button>
-        <button id="btnRun" class="btn-primary" onclick="runHealingCycle()">⚡ Run Autonomous Repair Cycle</button>
+        <button class="btn-secondary" onclick="openInspectorModal()">🌿 Entire AST & Diff Inspector</button>
+        <button class="btn-secondary" onclick="resetCurrentTarget()">↺ Reset Buggy Baseline</button>
+        <button id="btnRun" class="btn-primary" onclick="runSwarmLifecycle()">⚡ Run Autonomous Swarm</button>
+      </div>
+    </div>
+
+    <!-- Multi-Agent Swarm Tiles -->
+    <div class="swarm-bar">
+      <div class="agent-tile active" id="tileTriage">
+        <div class="agent-title">🩺 Triage Agent</div>
+        <div class="agent-desc">Ingests exception trace & records Neatlogs baseline.</div>
+        <span class="agent-badge ready" id="badgeTriage">Ready</span>
+      </div>
+      <div class="agent-tile active" id="tileContext">
+        <div class="agent-title">🌿 Context Agent</div>
+        <div class="agent-desc">Entire AST graph symbol mapping & git checkpoints.</div>
+        <span class="agent-badge ready" id="badgeContext">Ready</span>
+      </div>
+      <div class="agent-tile active" id="tilePatch">
+        <div class="agent-title">🩹 Doctor Patch Agent</div>
+        <div class="agent-desc">Synthesizes surgical code repairs and unified diffs.</div>
+        <span class="agent-badge ready" id="badgePatch">Ready</span>
+      </div>
+      <div class="agent-tile active" id="tileQA">
+        <div class="agent-title">🧪 QA Verifier Agent</div>
+        <div class="agent-desc">Executes regression suite & drives self-healing loop.</div>
+        <span class="agent-badge ready" id="badgeQA">Ready</span>
+      </div>
+      <div class="agent-tile active" id="tileCFO">
+        <div class="agent-title">💼 CFO Agent</div>
+        <div class="agent-desc">cfo.ai real-time unit economics & customer ROI.</div>
+        <span class="agent-badge ready" id="badgeCFO">Ready</span>
       </div>
     </div>
 
     <div class="grid-layout">
       <!-- Main Left Column -->
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
         
         <!-- Comparative Evidence Card -->
         <div class="card">
@@ -330,7 +483,7 @@
                 <span style="color: var(--danger)">❌ Pre-Fix Baseline Incident</span>
                 <span id="failCode">Exit: 1</span>
               </div>
-              <div class="code-box" id="failOutput">Press "Run Autonomous Repair Cycle" to execute reproduction & self-healing...</div>
+              <div class="code-box" id="failOutput">Press "Run Autonomous Swarm" to execute multi-agent triage & repair...</div>
             </div>
 
             <div class="pane success">
@@ -338,7 +491,7 @@
                 <span style="color: var(--success)">✅ Post-Fix Verified Resolution</span>
                 <span id="passCode">Exit: 0</span>
               </div>
-              <div class="code-box" id="passOutput">Awaiting repair verification...</div>
+              <div class="code-box" id="passOutput">Awaiting self-healing verification...</div>
             </div>
           </div>
         </div>
@@ -350,21 +503,30 @@
             <span style="font-size: 0.75rem; color: var(--text-muted);" id="spanCount">0 spans recorded</span>
           </div>
           <div class="waterfall-list" id="waterfallList">
-            <div style="color: var(--text-muted); font-size: 0.85rem; padding: 1rem; text-align: center;">No active spans. Click "Run Autonomous Repair Cycle".</div>
+            <div style="color: var(--text-muted); font-size: 0.825rem; padding: 1rem; text-align: center;">No active spans. Click "Run Autonomous Swarm".</div>
           </div>
         </div>
 
       </div>
 
       <!-- Right Sidebar Column -->
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
         
-        <!-- cfo.ai Card -->
+        <!-- cfo.ai Interactive Sandbox -->
         <div class="card">
           <div class="card-header">
-            <span class="card-title">💼 cfo.ai Unit Economics & Business Model</span>
-            <span class="badge-tag" style="background: rgba(63, 185, 80, 0.15); color: var(--success); border-color: rgba(63, 185, 80, 0.3);">Base vs Growth</span>
+            <span class="card-title">💼 cfo.ai Dynamic Model Sandbox</span>
+            <span class="badge-tag" style="background: rgba(63, 185, 80, 0.15); color: var(--success); border-color: rgba(63, 185, 80, 0.3);">Interactive Slider</span>
           </div>
+
+          <div class="slider-box">
+            <div class="slider-header">
+              <span>Active Customer Teams:</span>
+              <b id="sliderCustomerCount" style="color: var(--accent); font-family: var(--font-mono);">250 teams</b>
+            </div>
+            <input type="range" id="customerSlider" min="20" max="1000" step="10" value="250" oninput="updateFinancialSimulation(this.value)">
+          </div>
+
           <div class="kpi-grid">
             <div class="kpi-box">
               <span class="kpi-label">Gross Margin</span>
@@ -379,13 +541,14 @@
               <span class="kpi-value" id="kpiCost">$0.017</span>
             </div>
             <div class="kpi-box">
-              <span class="kpi-label">Growth MRR</span>
+              <span class="kpi-label">Monthly MRR</span>
               <span class="kpi-value" id="kpiMrr">$374,750</span>
             </div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.5rem; display: flex; justify-content: space-between;">
-            <span>Runway: <b style="color: var(--success)">Profitable / Infinite</b></span>
-            <span>Tokens / Patch: <b>8,800</b></span>
+
+          <div style="font-size: 0.725rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.5rem; display: flex; justify-content: space-between;">
+            <span>Runway: <b style="color: var(--success)" id="kpiRunway">Profitable / Infinite</b></span>
+            <span>Annual Run Rate: <b id="kpiArr">$4,497,000</b></span>
           </div>
         </div>
 
@@ -395,11 +558,33 @@
             <span class="card-title">🌿 Entire Checkpoints & Git Lineage</span>
             <span id="chkCount" style="font-size: 0.75rem; color: var(--text-muted);">0 checkpoints</span>
           </div>
-          <div id="checkpointsList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 280px; overflow-y: auto;">
-            <div style="color: var(--text-muted); font-size: 0.85rem; padding: 0.5rem;">Awaiting session commits in .entire/...</div>
+          <div id="checkpointsList" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 220px; overflow-y: auto;">
+            <div style="color: var(--text-muted); font-size: 0.825rem; padding: 0.5rem;">Awaiting session commits in .entire/...</div>
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- Inspector Modal (Diff & Entire Graph) -->
+  <div class="modal-backdrop" id="inspectorModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">🌿 Entire AST Code Graph & Synthesized Patch Diff</h3>
+        <button style="background: transparent; color: var(--text-muted); font-size: 1.25rem; border: none; cursor: pointer;" onclick="closeInspectorModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <h4 style="font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--accent);">Synthesized Surgical Patch Diff:</h4>
+          <div class="code-box" id="modalDiff" style="max-height: 250px;">Run a healing cycle to inspect the synthesized unified diff...</div>
+        </div>
+        <div>
+          <h4 style="font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--accent);">Entire AST Code Graph Symbols:</h4>
+          <div id="modalAstSymbols" style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+            <span style="color: var(--text-muted); font-size: 0.8rem;">Loading AST symbols...</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -409,80 +594,150 @@
   </footer>
 
   <script>
-    async function runHealingCycle() {
+    let latestDiff = "";
+
+    async function changeScenario() {
+      await resetCurrentTarget();
+    }
+
+    async function resetCurrentTarget() {
+      const scenario = document.getElementById('scenarioSelect').value;
+      const res = await fetch(`/api/reset?scenario=${scenario}`);
+      const data = await res.json();
+      document.getElementById('failOutput').innerText = `Reset target repository to buggy baseline for scenario: ${scenario}.\nReady for reproduction run.`;
+      document.getElementById('passOutput').innerText = 'Awaiting self-healing verification...';
+      document.getElementById('cycleStatus').innerText = 'Baseline Reset';
+
+      // Reset badges
+      ['badgeTriage', 'badgeContext', 'badgePatch', 'badgeQA', 'badgeCFO'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = 'agent-badge ready';
+        el.innerText = 'Ready';
+      });
+    }
+
+    async function runSwarmLifecycle() {
       const btn = document.getElementById('btnRun');
+      const scenario = document.getElementById('scenarioSelect').value;
       btn.disabled = true;
-      btn.innerText = '⚙️ Running Self-Healing Cycle...';
-      document.getElementById('cycleStatus').innerText = 'Healing in Progress...';
+      btn.innerText = '⚙️ Swarm Running...';
+      document.getElementById('cycleStatus').innerText = 'Swarm in Progress...';
+
+      // Step-by-step visual animation for swarm agents
+      document.getElementById('badgeTriage').className = 'agent-badge success';
+      document.getElementById('badgeTriage').innerText = 'Ingesting...';
 
       try {
-        const res = await fetch('/api/run');
+        const res = await fetch(`/api/run?scenario=${scenario}`);
         const data = await res.json();
-        
-        document.getElementById('cycleStatus').innerText = data.status === 'RESOLVED' ? 'Healed & Verified (Exit 0)' : 'Failed';
-        document.getElementById('failOutput').innerText = data.initial_failure.output || 'No baseline error captured';
-        document.getElementById('passOutput').innerText = data.verified_success ? data.verified_success.output : 'Fix verified';
 
-        // Render Waterfall
+        // Update Agent Badges
+        document.getElementById('badgeTriage').innerText = 'Done';
+        document.getElementById('badgeContext').className = 'agent-badge success';
+        document.getElementById('badgeContext').innerText = `${data.context_report ? data.context_report.relevant_symbols.length : 6} AST Symbols`;
+        document.getElementById('badgePatch').className = 'agent-badge success';
+        document.getElementById('badgePatch').innerText = `${data.attempts} Attempts`;
+        document.getElementById('badgeQA').className = 'agent-badge success';
+        document.getElementById('badgeQA').innerText = data.status === 'RESOLVED' ? '100% Passed' : 'Failed';
+        document.getElementById('badgeCFO').className = 'agent-badge success';
+        document.getElementById('badgeCFO').innerText = 'Model Ready';
+
+        // Evidence Panes
+        document.getElementById('cycleStatus').innerText = data.status === 'RESOLVED' ? 'Resolved & Verified' : 'Failed';
+        document.getElementById('failOutput').innerText = data.initial_failure ? data.initial_failure.output : 'Baseline error';
+        document.getElementById('passOutput').innerText = data.verified_success ? data.verified_success.output : 'Verified output';
+
+        latestDiff = data.final_diff || 'No diff available';
+
+        // Spans Waterfall
         const list = document.getElementById('waterfallList');
         list.innerHTML = '';
-        data.telemetry_spans.forEach(s => {
+        (data.telemetry_spans || []).forEach(s => {
           const div = document.createElement('div');
           div.className = 'span-item';
           div.innerHTML = `
             <div>
               <b>${s.name}</b>
-              <span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 0.5rem;">[${s.node_type}]</span>
+              <span style="color: var(--text-muted); font-size: 0.725rem; margin-left: 0.4rem;">[${s.node_type}]</span>
             </div>
-            <div style="display: flex; gap: 0.5rem; align-items: center;">
-              <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">${s.duration_ms}ms</span>
+            <div style="display: flex; gap: 0.45rem; align-items: center;">
+              <span style="font-family: var(--font-mono); font-size: 0.725rem; color: var(--text-muted);">${s.duration_ms}ms</span>
               <span class="span-badge ${s.status === 'SUCCESS' ? 'success' : 'failure'}">${s.status}</span>
             </div>
           `;
           list.appendChild(div);
         });
-        document.getElementById('spanCount').innerText = `${data.telemetry_spans.length} spans recorded in Neatlogs`;
+        document.getElementById('spanCount').innerText = `${(data.telemetry_spans || []).length} spans in Neatlogs`;
 
-        // Render Checkpoints
+        // Checkpoints
         const chkList = document.getElementById('checkpointsList');
         chkList.innerHTML = '';
-        data.checkpoints.forEach(c => {
+        (data.checkpoints || []).slice(-6).reverse().forEach(c => {
           const div = document.createElement('div');
-          div.style = 'background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.6rem; font-size: 0.75rem;';
+          div.style = 'background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; font-size: 0.725rem;';
           div.innerHTML = `
             <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); color: var(--accent);">
               <span>${c.checkpoint_id}</span>
               <span style="color: ${c.verification_status === 'PASSED' ? 'var(--success)' : 'var(--warning)'}">${c.action}</span>
             </div>
-            <div style="color: var(--text-muted); margin-top: 0.25rem;">${c.rationale}</div>
-            <div style="color: #6e7681; font-size: 0.68rem; margin-top: 0.25rem;">Git Commit: ${c.git_commit.substring(0, 8)} | AST: ${(c.entire_graph_nodes || []).slice(0, 3).join(', ')}</div>
+            <div style="color: var(--text-muted); margin-top: 0.2rem;">${c.rationale}</div>
           `;
           chkList.appendChild(div);
         });
-        document.getElementById('chkCount').innerText = `${data.checkpoints.length} checkpoints logged`;
+        document.getElementById('chkCount').innerText = `${(data.checkpoints || []).length} checkpoints logged`;
 
-        // Render KPIs
-        if (data.economics) {
-          document.getElementById('kpiMargin').innerText = `${data.economics.gross_margin_pct}%`;
-          document.getElementById('kpiRoi').innerText = `${data.economics.customer_roi.roi_multiple}x`;
-          document.getElementById('kpiCost').innerText = `$${data.economics.unit_economics.total_unit_cost}`;
-          document.getElementById('kpiMrr').innerText = `$${data.economics.mrr.toLocaleString()}`;
+        // Update KPIs from CFO report
+        if (data.cfo_report) {
+          document.getElementById('kpiMargin').innerText = `${data.cfo_report.gross_margin_pct}%`;
+          document.getElementById('kpiRoi').innerText = `${data.cfo_report.customer_roi_multiple}x`;
+          document.getElementById('kpiCost').innerText = `$${data.cfo_report.unit_cost_per_patch}`;
+          document.getElementById('kpiMrr').innerText = `$${data.cfo_report.mrr.toLocaleString()}`;
+          document.getElementById('kpiArr').innerText = `$${data.cfo_report.arr.toLocaleString()}`;
+          document.getElementById('kpiRunway').innerText = data.cfo_report.runway;
         }
 
       } catch (err) {
-        alert('Error executing healing cycle: ' + err);
+        alert('Swarm execution error: ' + err);
       } finally {
         btn.disabled = false;
-        btn.innerText = '⚡ Run Autonomous Repair Cycle';
+        btn.innerText = '⚡ Run Autonomous Swarm';
       }
     }
 
-    async function resetTarget() {
-      await fetch('/api/reset');
-      document.getElementById('failOutput').innerText = 'Reset to buggy baseline. Ready for reproduction run.';
-      document.getElementById('passOutput').innerText = 'Awaiting repair verification...';
-      document.getElementById('cycleStatus').innerText = 'Baseline Reset';
-      alert('Target service reset to buggy state!');
+    async function updateFinancialSimulation(val) {
+      document.getElementById('sliderCustomerCount').innerText = `${val} teams`;
+      const res = await fetch(`/api/economics/simulate?customers=${val}`);
+      const data = await res.json();
+      document.getElementById('kpiMargin').innerText = `${data.gross_margin_pct}%`;
+      document.getElementById('kpiRoi').innerText = `${data.customer_roi.roi_multiple}x`;
+      document.getElementById('kpiMrr').innerText = `$${data.mrr.toLocaleString()}`;
+      document.getElementById('kpiArr').innerText = `$${data.arr.toLocaleString()}`;
+      document.getElementById('kpiRunway').innerText = data.runway;
+    }
+
+    async function openInspectorModal() {
+      document.getElementById('inspectorModal').style.display = 'flex';
+      document.getElementById('modalDiff').innerText = latestDiff || 'Run a healing cycle to generate the surgical patch diff.';
+
+      // Fetch AST Graph
+      try {
+        const res = await fetch('/api/entire/graph');
+        const graph = await res.json();
+        const container = document.getElementById('modalAstSymbols');
+        container.innerHTML = '';
+        (graph.nodes || []).slice(0, 16).forEach(n => {
+          const span = document.createElement('span');
+          span.style = 'background: var(--bg-secondary); border: 1px solid var(--border); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent);';
+          span.innerText = `${n.type}: ${n.name}`;
+          container.appendChild(span);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function closeInspectorModal() {
+      document.getElementById('inspectorModal').style.display = 'none';
     }
   </script>
 </body>

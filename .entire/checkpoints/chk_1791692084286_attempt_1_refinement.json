@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791692084286",
+  "timestamp": "2026-10-11T04:14:44.286467Z",
+  "action": "attempt_1_refinement",
+  "rationale": "Attempt 1 caught regression in QA suite; triggering recovery",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "FAILED",
+  "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,20 +1,19 @@\n \"\"\"\n sample_target_repo/service.py - Agent Tool Payload Normalizer\n-BUG: Assumes legacy flat schema, crashes with KeyError when upstream API returns nested structure.\n+[ATTEMPT 1 PATCH - Handled nested result but missed default fallback for total]\n \"\"\"\n \n from typing import Dict, Any, List\n \n \n class ToolDataParser:\n-    \"\"\"Parses agent tool responses into standardized record summaries.\"\"\"\n-\n     def normalize_payload(self, raw_response: Dict[str, Any]) -> Dict[str, Any]:\n-        # BUG: Rigid key access fails when API returns nested 'result' or renamed fields\n-        items = raw_response[\"data\"][\"items\"]\n+        data = raw_response.get(\"data\") or raw_response.get(\"result\", {})\n+        items = data.get(\"items\") or data.get(\"records\") or []\n+        # Flawed: Still hard-indexes raw_response[\"total\"] which causes KeyError when omitted!\n         total_count = raw_response[\"total\"]\n         \n-        processed = [{\"id\": item[\"id\"], \"value\": item.get(\"val\", 0)} for item in items]\n+        processed = [{\"id\": item.get(\"id\"), \"value\": item.get(\"val\", item.get(\"value\", 0))} for item in items]\n         return {\n             \"status\": \"success\",\n             \"count\": len(processed),",
+  "git_commit": "19968beb4c8d6babc151bc7721576ce8ebcf0b2e",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "run_agent"
+  ]
+}

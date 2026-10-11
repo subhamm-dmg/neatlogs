@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791692085135",
+  "timestamp": "2026-10-11T04:14:45.135174Z",
+  "action": "verify_and_resolve",
+  "rationale": "Verified green across test suite for cache_leak",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "PASSED",
+  "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,9 +1,10 @@\n \"\"\"\n sample_target_repo/service.py - In-Memory Session Cache\n-[ATTEMPT 1 PATCH - Handled TTL check on read but missed LRU max capacity eviction]\n+[VERIFIED RESOLUTION - Active TTL eviction and bounded FIFO/LRU capacity enforcement]\n \"\"\"\n \n import time\n+from collections import OrderedDict\n from typing import Dict, Any, Optional\n \n \n@@ -11,21 +12,28 @@\n     def __init__(self, max_entries: int = 5, default_ttl_sec: float = 0.2):\n         self.max_entries = max_entries\n         self.default_ttl = default_ttl_sec\n-        self.store: Dict[str, Any] = {}\n+        self.store: OrderedDict[str, Any] = OrderedDict()\n         self.expiry: Dict[str, float] = {}\n \n     def set(self, key: str, value: Any, ttl: Optional[float] = None) -> None:\n-        # Flawed: Still doesn't evict oldest entries when size exceeds max_entries!\n         effective_ttl = ttl if ttl is not None else self.default_ttl\n+        \n+        # Enforce max capacity bounding\n+        if key not in self.store and len(self.store) >= self.max_entries:\n+            oldest_key, _ = self.store.popitem(last=False)\n+            self.expiry.pop(oldest_key, None)\n+\n         self.store[key] = value\n+        self.store.move_to_end(key)\n         self.expiry[key] = time.time() + effective_ttl\n \n     def get(self, key: str) -> Optional[Any]:\n         if key in self.store:\n             if time.time() > self.expiry.get(key, 0):\n-                del self.store[key]\n-                del self.expiry[key]\n+                self.store.pop(key, None)\n+                self.expiry.pop(key, None)\n                 return None\n+            self.store.move_to_end(key)\n             return self.store[key]\n         return None\n ",
+  "git_commit": "19968beb4c8d6babc151bc7721576ce8ebcf0b2e",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "run_agent"
+  ]
+}

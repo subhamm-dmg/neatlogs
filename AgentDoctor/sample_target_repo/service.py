@@ -1,6 +1,6 @@
 """
-sample_target_repo/service.py
-Target service monitored by AgentDoctor: Token Bucket Rate Limiter with burst window.
+sample_target_repo/service.py - Token Bucket Rate Limiter
+BUG: Refill calculation fails to advance last_refill on burst consumption.
 """
 
 import time
@@ -10,8 +10,7 @@ from typing import Dict, Tuple
 class RateLimiter:
     """
     Token-bucket rate limiter.
-    BUG: The refill calculation fails to update last_refill_timestamp correctly
-    when capacity is exceeded, causing sudden zero-token lockouts or runaway refills under burst traffic!
+    BUG: last_refill is never advanced on successful token consumption, causing runaway refills.
     """
 
     def __init__(self, rate_per_second: float = 10.0, capacity: int = 20):

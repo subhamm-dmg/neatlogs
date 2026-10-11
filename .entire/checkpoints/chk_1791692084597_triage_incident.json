@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791692084597",
+  "timestamp": "2026-10-11T04:14:44.597480Z",
+  "action": "triage_incident",
+  "rationale": "Context mapped for AssertionError: \u274c test_ttl_expiration_eviction: FAILED -> Expected key to be evicted after TTL expiration, but got 'temporary_token'",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "FAILED",
+  "diff": "",
+  "git_commit": "19968beb4c8d6babc151bc7721576ce8ebcf0b2e",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "run_agent"
+  ]
+}
