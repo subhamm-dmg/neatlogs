@@ -496,11 +496,23 @@
           </div>
         </div>
 
+        <!-- Synthesized Code Patch Diff Card (Entire Lineage) -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🌿 Synthesized Unified Patch Diff (Entire Lineage)</span>
+            <span id="diffLinesCount" class="badge-tag" style="background: rgba(63, 185, 80, 0.15); color: var(--success); border-color: rgba(63, 185, 80, 0.3);">Awaiting run</span>
+          </div>
+          <div class="code-box" id="mainDiffView" style="max-height: 220px; font-size: 0.76rem; background: #05070a; line-height: 1.45;">Unified diff generated during autonomous repair will appear here with syntax highlighting...</div>
+        </div>
+
         <!-- Neatlogs Spans Card -->
         <div class="card">
           <div class="card-header">
             <span class="card-title">📊 Neatlogs Telemetry & Trace Waterfall</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted);" id="spanCount">0 spans recorded</span>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <a href="https://app.neatlogs.com/projects/111108ac-be58-41b0-a8a4-ad44448e319e" target="_blank" style="font-size: 0.75rem; color: var(--accent); text-decoration: none;">Live Neatlogs Portal ↗</a>
+              <span style="font-size: 0.75rem; color: var(--text-muted);" id="spanCount">0 spans recorded</span>
+            </div>
           </div>
           <div class="waterfall-list" id="waterfallList">
             <div style="color: var(--text-muted); font-size: 0.825rem; padding: 1rem; text-align: center;">No active spans. Click "Run Autonomous Swarm".</div>
@@ -607,6 +619,9 @@
       document.getElementById('failOutput').innerText = `Reset target repository to buggy baseline for scenario: ${scenario}.\nReady for reproduction run.`;
       document.getElementById('passOutput').innerText = 'Awaiting self-healing verification...';
       document.getElementById('cycleStatus').innerText = 'Baseline Reset';
+      document.getElementById('mainDiffView').innerHTML = 'Unified diff generated during autonomous repair will appear here with syntax highlighting...';
+      document.getElementById('diffLinesCount').innerText = 'Awaiting run';
+      document.getElementById('diffLinesCount').style = 'background: rgba(139, 148, 158, 0.15); color: var(--text-muted); border-color: rgba(139, 148, 158, 0.3);';
 
       // Reset badges
       ['badgeTriage', 'badgeContext', 'badgePatch', 'badgeQA', 'badgeCFO'].forEach(id => {
@@ -614,6 +629,25 @@
         el.className = 'agent-badge ready';
         el.innerText = 'Ready';
       });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function formatDiffHtml(diff) {
+      if (!diff) return '<span style="color: var(--text-muted); padding: 0.5rem; display: block;">No diff generated yet.</span>';
+      return diff.split('\n').map(line => {
+        if (line.startsWith('+') && !line.startsWith('+++')) {
+          return `<div style="color: #3fb950; background: rgba(63,185,80,0.12); padding: 0.1rem 0.4rem; font-family: var(--font-mono);">${escapeHtml(line)}</div>`;
+        } else if (line.startsWith('-') && !line.startsWith('---')) {
+          return `<div style="color: #f85149; background: rgba(248,81,73,0.12); padding: 0.1rem 0.4rem; font-family: var(--font-mono);">${escapeHtml(line)}</div>`;
+        } else if (line.startsWith('@@')) {
+          return `<div style="color: #58a6ff; font-weight: 600; padding: 0.15rem 0.4rem; background: rgba(88,166,255,0.08); font-family: var(--font-mono);">${escapeHtml(line)}</div>`;
+        } else {
+          return `<div style="color: #8b949e; padding: 0.05rem 0.4rem; font-family: var(--font-mono);">${escapeHtml(line)}</div>`;
+        }
+      }).join('');
     }
 
     async function runSwarmLifecycle() {
@@ -648,6 +682,10 @@
         document.getElementById('passOutput').innerText = data.verified_success ? data.verified_success.output : 'Verified output';
 
         latestDiff = data.final_diff || 'No diff available';
+        document.getElementById('mainDiffView').innerHTML = formatDiffHtml(latestDiff);
+        const diffLineCount = (latestDiff || '').split('\n').filter(l => l.trim()).length;
+        document.getElementById('diffLinesCount').innerText = `${diffLineCount} lines changed`;
+        document.getElementById('diffLinesCount').style = 'background: rgba(63, 185, 80, 0.15); color: var(--success); border-color: rgba(63, 185, 80, 0.3);';
 
         // Spans Waterfall
         const list = document.getElementById('waterfallList');
@@ -717,7 +755,7 @@
 
     async function openInspectorModal() {
       document.getElementById('inspectorModal').style.display = 'flex';
-      document.getElementById('modalDiff').innerText = latestDiff || 'Run a healing cycle to generate the surgical patch diff.';
+      document.getElementById('modalDiff').innerHTML = formatDiffHtml(latestDiff);
 
       // Fetch AST Graph
       try {

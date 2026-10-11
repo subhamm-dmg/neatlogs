@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "chk_1791710098238",
+  "timestamp": "2026-10-11T09:14:58.238671Z",
+  "action": "attempt_1_refinement",
+  "rationale": "Attempt 1 caught regression in QA suite; triggering recovery",
+  "files_changed": [
+    "sample_target_repo/service.py"
+  ],
+  "verification_status": "FAILED",
+  "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,6 +1,6 @@\n \"\"\"\n sample_target_repo/service.py - Token Bucket Rate Limiter\n-BUG: Refill calculation fails to advance last_refill on burst consumption.\n+[ATTEMPT 1 PATCH - Naive update before elapsed calculation]\n \"\"\"\n \n import time\n@@ -8,28 +8,24 @@\n \n \n class RateLimiter:\n-    \"\"\"\n-    Token-bucket rate limiter.\n-    BUG: last_refill is never advanced on successful token consumption, causing runaway refills.\n-    \"\"\"\n-\n     def __init__(self, rate_per_second: float = 10.0, capacity: int = 20):\n-        self.rate = rate_per_second\n-        self.capacity = capacity\n+        self.rate = float(rate_per_second)\n+        self.capacity = float(capacity)\n         self.tokens: float = float(capacity)\n         self.last_refill = time.time()\n         self.lockouts = 0\n \n     def allow_request(self, tokens_needed: int = 1) -> Tuple[bool, Dict[str, float]]:\n         now = time.time()\n-        elapsed = now - self.last_refill\n+        # Flawed: last_refill updated before computing elapsed results in elapsed = 0!\n+        self.last_refill = now\n+        elapsed = max(0.0, now - self.last_refill)\n         refill = elapsed * self.rate\n-        self.tokens = min(float(self.capacity), self.tokens + refill)\n-        \n+        self.tokens = min(self.capacity, self.tokens + refill)\n+\n         if self.tokens < tokens_needed:\n             self.lockouts += 1\n-            return False, {\"tokens_remaining\": self.tokens, \"lockouts\": self.lockouts}\n+            return False, {\"tokens_remaining\": round(self.tokens, 2), \"lockouts\": self.lockouts}\n \n         self.tokens -= tokens_needed\n-        # BUG: missing self.last_refill = now on burst consumption!\n-        return True, {\"tokens_remaining\": self.tokens, \"lockouts\": self.lockouts}\n+        return True, {\"tokens_remaining\": round(self.tokens, 2), \"lockouts\": self.lockouts}",
+  "git_commit": "65c26057b61185fa1c8a5ec894b9a8656e18918b",
+  "entire_graph_nodes": [
+    "load_scenario",
+    "get_available_scenarios",
+    "calculate_scenario",
+    "calculate_agent_economics",
+    "get_comparative_scenarios",
+    "generate_business_plan_markdown",
+    "index",
+    "list_scenarios"
+  ]
+}

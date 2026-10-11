@@ -34,6 +34,22 @@ AgentDoctor implements a full autonomous agent lifecycle (addressing all 8 hacka
 6. **Telemetry & Verification Export (Neatlogs)**: Records every span, LLM reasoning turn, test runner duration, token count, and comparative before/after metrics to Neatlogs.
 7. **Business Impact & ROI Calculation (cfo.ai)**: Computes unit economics ($0.017/patch, 99.4% gross margin, 39.6x customer ROI) for business planning.
 
+```mermaid
+graph TD
+    Inc["🚨 Runtime Exception / Test Failure"] --> Triage["🩺 Triage Agent"]
+    Triage -->|"1. Record Baseline Failure Span"| Neatlogs[("📊 Neatlogs Ingestion")]
+    Triage --> Context["🌿 Context Agent"]
+    Context -->|"2. Parse AST Graph & Checkpoint"| Entire[("🌿 Entire Git Lineage")]
+    Context --> Doctor["🩹 Doctor Patch Agent"]
+    Doctor -->|"3. Root Cause & Strategy"| LLM["🧠 LLM (Groq Llama 3.3 70B)"]
+    LLM --> Doctor
+    Doctor -->|"4. Apply Code Patch"| QA["🧪 QA Verifier Agent"]
+    QA -->|"5a. Regression Caught (Attempt 1)"| Doctor
+    QA -->|"5b. All Tests Green (Attempt 2)"| FinalChk[("🌿 Verified Entire Checkpoint")]
+    FinalChk --> CFO["💼 CFO Agent"]
+    CFO --> Model["📈 cfo.ai Unit Economics & Customer ROI"]
+```
+
 ---
 
 ## 🏆 Hackathon Sponsor Alignments & Evidence

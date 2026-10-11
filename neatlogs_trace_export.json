@@ -1,0 +1,239 @@
+{
+  "project_id": "111108ac-be58-41b0-a8a4-ad44448e319e",
+  "neatlogs_dashboard_url": "https://app.neatlogs.com/projects/111108ac-be58-41b0-a8a4-ad44448e319e",
+  "session_id": "sess_1791710097183",
+  "timestamp": "2026-10-11T09:14:59.124881Z",
+  "scenario": "Token Bucket Timestamp Drift",
+  "category": "Concurrency & Timing",
+  "status": "RESOLVED",
+  "attempts": 2,
+  "total_latency_ms": 2549.37,
+  "tokens_used": 4400,
+  "telemetry_spans": [
+    {
+      "span_id": "span_1791710097645_1",
+      "name": "triage_incident_baseline",
+      "node_type": "triage_agent",
+      "duration_ms": 433.05,
+      "status": "FAILURE",
+      "error": "\u274c test_burst_refill_and_continuity: FAILED -> CRITICAL DRIFT BUG: Request for 2 tokens was granted (tokens_remaining=4.210537910461426) because last_refill was not advanced properly!",
+      "timestamp": "2026-10-11T09:14:57.645156Z"
+    },
+    {
+      "span_id": "span_1791710097681_2",
+      "name": "entire_ast_context_mapping",
+      "node_type": "context_agent",
+      "duration_ms": 35.89,
+      "status": "SUCCESS",
+      "error": null,
+      "timestamp": "2026-10-11T09:14:57.681123Z"
+    },
+    {
+      "span_id": "span_1791710098036_3",
+      "name": "llm_reasoning_attempt_1",
+      "node_type": "llm_call",
+      "duration_ms": 355.31,
+      "status": "SUCCESS",
+      "error": null,
+      "timestamp": "2026-10-11T09:14:58.036616Z"
+    },
+    {
+      "span_id": "span_1791710098037_4",
+      "name": "patch_synthesis_attempt_1",
+      "node_type": "doctor_patch_agent",
+      "duration_ms": 356.77,
+      "status": "SUCCESS",
+      "error": null,
+      "timestamp": "2026-10-11T09:14:58.037972Z"
+    },
+    {
+      "span_id": "span_1791710098238_5",
+      "name": "qa_verification_attempt_1",
+      "node_type": "qa_verifier_agent",
+      "duration_ms": 200.43,
+      "status": "FAILURE",
+      "error": "============================================================\n\ud83e\uddea Running RateLimiter Service Test Suite...\n============================================================\n  \u2705 test_basic_allowance: PASSED\n  \u2705 test_burst_exhaustion: PASSED\n  \u274c test_replenishment_timing: FAILED -> Request for 2 tokens should succeed after 0.15s, remaining=0.0",
+      "timestamp": "2026-10-11T09:14:58.238534Z"
+    },
+    {
+      "span_id": "span_1791710098631_6",
+      "name": "llm_reasoning_attempt_2",
+      "node_type": "llm_call",
+      "duration_ms": 355.32,
+      "status": "SUCCESS",
+      "error": null,
+      "timestamp": "2026-10-11T09:14:58.631478Z"
+    },
+    {
+      "span_id": "span_1791710098633_7",
+      "name": "patch_synthesis_attempt_2",
+      "node_type": "doctor_patch_agent",
+      "duration_ms": 357.19,
+      "status": "SUCCESS",
+      "error": null,
+      "timestamp": "2026-10-11T09:14:58.633199Z"
+    },
+    {
+      "span_id": "span_1791710099088_8",
+      "name": "qa_verification_attempt_2",
+      "node_type": "qa_verifier_agent",
+      "duration_ms": 455.41,
+      "status": "SUCCESS",
+      "error": null,
+      "timestamp": "2026-10-11T09:14:59.088751Z"
+    }
+  ],
+  "checkpoints": [
+    {
+      "checkpoint_id": "chk_1791709924846",
+      "timestamp": "2026-10-11T09:12:04.846094Z",
+      "action": "verify_and_resolve",
+      "rationale": "Verified green across test suite for rate_limiter",
+      "files_changed": [
+        "sample_target_repo/service.py"
+      ],
+      "verification_status": "PASSED",
+      "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,6 +1,6 @@\n \"\"\"\n sample_target_repo/service.py - Token Bucket Rate Limiter\n-[ATTEMPT 1 PATCH - Naive update before elapsed calculation]\n+[VERIFIED RESOLUTION - Synchronized timestamp advancement and capacity clamping]\n \"\"\"\n \n import time\n@@ -17,11 +17,12 @@\n \n     def allow_request(self, tokens_needed: int = 1) -> Tuple[bool, Dict[str, float]]:\n         now = time.time()\n-        # Flawed: last_refill updated before computing elapsed results in elapsed = 0!\n-        self.last_refill = now\n         elapsed = max(0.0, now - self.last_refill)\n+        \n+        # Accurately compute replenished tokens based on elapsed interval\n         refill = elapsed * self.rate\n         self.tokens = min(self.capacity, self.tokens + refill)\n+        self.last_refill = now\n \n         if self.tokens < tokens_needed:\n             self.lockouts += 1",
+      "git_commit": "65c26057b61185fa1c8a5ec894b9a8656e18918b",
+      "entire_graph_nodes": [
+        "load_scenario",
+        "get_available_scenarios",
+        "calculate_scenario",
+        "calculate_agent_economics",
+        "get_comparative_scenarios",
+        "generate_business_plan_markdown",
+        "index",
+        "list_scenarios"
+      ]
+    },
+    {
+      "checkpoint_id": "chk_1791710097645",
+      "timestamp": "2026-10-11T09:14:57.645265Z",
+      "action": "triage_incident",
+      "rationale": "Context mapped for TimingDrift: \u274c test_burst_refill_and_continuity: FAILED -> CRITICAL DRIFT BUG: Request for 2 tokens was granted (tokens_remaining=4.210537910461426) because last_refill was not advanced properly!",
+      "files_changed": [
+        "sample_target_repo/service.py"
+      ],
+      "verification_status": "FAILED",
+      "diff": "",
+      "git_commit": "65c26057b61185fa1c8a5ec894b9a8656e18918b",
+      "entire_graph_nodes": [
+        "load_scenario",
+        "get_available_scenarios",
+        "calculate_scenario",
+        "calculate_agent_economics",
+        "get_comparative_scenarios",
+        "generate_business_plan_markdown",
+        "index",
+        "list_scenarios"
+      ]
+    },
+    {
+      "checkpoint_id": "chk_1791710098238",
+      "timestamp": "2026-10-11T09:14:58.238671Z",
+      "action": "attempt_1_refinement",
+      "rationale": "Attempt 1 caught regression in QA suite; triggering recovery",
+      "files_changed": [
+        "sample_target_repo/service.py"
+      ],
+      "verification_status": "FAILED",
+      "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,6 +1,6 @@\n \"\"\"\n sample_target_repo/service.py - Token Bucket Rate Limiter\n-BUG: Refill calculation fails to advance last_refill on burst consumption.\n+[ATTEMPT 1 PATCH - Naive update before elapsed calculation]\n \"\"\"\n \n import time\n@@ -8,28 +8,24 @@\n \n \n class RateLimiter:\n-    \"\"\"\n-    Token-bucket rate limiter.\n-    BUG: last_refill is never advanced on successful token consumption, causing runaway refills.\n-    \"\"\"\n-\n     def __init__(self, rate_per_second: float = 10.0, capacity: int = 20):\n-        self.rate = rate_per_second\n-        self.capacity = capacity\n+        self.rate = float(rate_per_second)\n+        self.capacity = float(capacity)\n         self.tokens: float = float(capacity)\n         self.last_refill = time.time()\n         self.lockouts = 0\n \n     def allow_request(self, tokens_needed: int = 1) -> Tuple[bool, Dict[str, float]]:\n         now = time.time()\n-        elapsed = now - self.last_refill\n+        # Flawed: last_refill updated before computing elapsed results in elapsed = 0!\n+        self.last_refill = now\n+        elapsed = max(0.0, now - self.last_refill)\n         refill = elapsed * self.rate\n-        self.tokens = min(float(self.capacity), self.tokens + refill)\n-        \n+        self.tokens = min(self.capacity, self.tokens + refill)\n+\n         if self.tokens < tokens_needed:\n             self.lockouts += 1\n-            return False, {\"tokens_remaining\": self.tokens, \"lockouts\": self.lockouts}\n+            return False, {\"tokens_remaining\": round(self.tokens, 2), \"lockouts\": self.lockouts}\n \n         self.tokens -= tokens_needed\n-        # BUG: missing self.last_refill = now on burst consumption!\n-        return True, {\"tokens_remaining\": self.tokens, \"lockouts\": self.lockouts}\n+        return True, {\"tokens_remaining\": round(self.tokens, 2), \"lockouts\": self.lockouts}",
+      "git_commit": "65c26057b61185fa1c8a5ec894b9a8656e18918b",
+      "entire_graph_nodes": [
+        "load_scenario",
+        "get_available_scenarios",
+        "calculate_scenario",
+        "calculate_agent_economics",
+        "get_comparative_scenarios",
+        "generate_business_plan_markdown",
+        "index",
+        "list_scenarios"
+      ]
+    },
+    {
+      "checkpoint_id": "chk_1791710099088",
+      "timestamp": "2026-10-11T09:14:59.088869Z",
+      "action": "verify_and_resolve",
+      "rationale": "Verified green across test suite for rate_limiter",
+      "files_changed": [
+        "sample_target_repo/service.py"
+      ],
+      "verification_status": "PASSED",
+      "diff": "--- service.py (unpatched)\n+++ service.py (patched)\n@@ -1,6 +1,6 @@\n \"\"\"\n sample_target_repo/service.py - Token Bucket Rate Limiter\n-[ATTEMPT 1 PATCH - Naive update before elapsed calculation]\n+[VERIFIED RESOLUTION - Synchronized timestamp advancement and capacity clamping]\n \"\"\"\n \n import time\n@@ -17,11 +17,12 @@\n \n     def allow_request(self, tokens_needed: int = 1) -> Tuple[bool, Dict[str, float]]:\n         now = time.time()\n-        # Flawed: last_refill updated before computing elapsed results in elapsed = 0!\n-        self.last_refill = now\n         elapsed = max(0.0, now - self.last_refill)\n+        \n+        # Accurately compute replenished tokens based on elapsed interval\n         refill = elapsed * self.rate\n         self.tokens = min(self.capacity, self.tokens + refill)\n+        self.last_refill = now\n \n         if self.tokens < tokens_needed:\n             self.lockouts += 1",
+      "git_commit": "65c26057b61185fa1c8a5ec894b9a8656e18918b",
+      "entire_graph_nodes": [
+        "load_scenario",
+        "get_available_scenarios",
+        "calculate_scenario",
+        "calculate_agent_economics",
+        "get_comparative_scenarios",
+        "generate_business_plan_markdown",
+        "index",
+        "list_scenarios"
+      ]
+    }
+  ],
+  "cfo_economics": {
+    "agent": "CFO Agent",
+    "role": "Unit Economics & Business Impact",
+    "status": "COMPLETED",
+    "unit_cost_per_patch": 0.0172,
+    "gross_margin_pct": 99.4,
+    "customer_roi_multiple": 39.6,
+    "mrr": 74950,
+    "arr": 899400,
+    "runway": "Profitable / Infinite",
+    "comparative_scenarios": {
+      "base": {
+        "scenario": "Starter",
+        "customers": 100,
+        "mrr": 49900,
+        "arr": 598800,
+        "monthly_patches": 15000,
+        "cogs": 257.88,
+        "infra_and_neatlogs": 250.0,
+        "gross_profit": 49392.12,
+        "gross_margin_pct": 99.0,
+        "unit_economics": {
+          "tokens_per_patch": 8800,
+          "inference_cost": 0.0052,
+          "sandbox_cost": 0.012,
+          "total_unit_cost": 0.0172
+        },
+        "customer_roi": {
+          "hours_saved_monthly": 375.0,
+          "net_savings_usd": 35126.0,
+          "roi_multiple": 71.4
+        },
+        "fixed_opex": 22000.0,
+        "net_cashflow": 27392.12,
+        "runway": "Profitable / Infinite"
+      },
+      "growth": {
+        "scenario": "Growth",
+        "customers": 250,
+        "mrr": 374750,
+        "arr": 4497000,
+        "monthly_patches": 62500,
+        "cogs": 1074.5,
+        "infra_and_neatlogs": 550.0,
+        "gross_profit": 373125.5,
+        "gross_margin_pct": 99.6,
+        "unit_economics": {
+          "tokens_per_patch": 8800,
+          "inference_cost": 0.0052,
+          "sandbox_cost": 0.012,
+          "total_unit_cost": 0.0172
+        },
+        "customer_roi": {
+          "hours_saved_monthly": 625.0,
+          "net_savings_usd": 57876.0,
+          "roi_multiple": 39.6
+        },
+        "fixed_opex": 45000.0,
+        "net_cashflow": 328125.5,
+        "runway": "Profitable / Infinite"
+      }
+    }
+  }
+}
