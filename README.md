@@ -199,32 +199,6 @@ AgentDoctor monitors `AgentDoctor/sample_target_repo/service.py`, a high-through
 
 ---
 
-## 💼 Business & Unit Economics Model (cfo.ai)
-
-| Metric | Starter Tier | Growth Tier *(Default)* | Enterprise Tier |
-| :--- | :--- | :--- | :--- |
-| **Monthly Price** | $499 / mo | **$1,499 / mo** | $4,999 / mo |
-| **Included Patches** | 100 / mo | **400 / mo** | 1,500 / mo |
-| **Inference Cost / Patch** | $0.0052 | **$0.0052** | $0.0052 |
-| **Sandbox Execution / Patch**| $0.0120 | **$0.0120** | $0.0120 |
-| **Total Unit Cost / Patch** | $0.0172 | **$0.0172** | $0.0172 |
-| **Active Customers** | 20 | **50** | 15 |
-| **Monthly Revenue (MRR)** | $9,980 | **$74,950** | $74,985 |
-| **Annual Run Rate (ARR)** | $119,760 | **$899,400** | $899,820 |
-| **Gross Margin** | 97.8% | **99.4%** | 99.6% |
-| **Customer Net Monthly ROI** | 23.8x | **39.6x** | 71.2x |
-
----
-
-## 🎥 Recording the Demo Video (Checklist)
-
-1. **Introduction (30s)**: Introduce AgentDoctor and the reliability challenge in autonomous agents.
-2. **Neatlogs Observability (45s)**: Show the baseline failing run on http://localhost:5050, highlighting the failure span in Neatlogs.
-3. **Entire Checkpoints (30s)**: Show the context extraction and commit checkpoints linking code changes to the agent's session.
-4. **Auto-Recovery & Verification (45s)**: Click "Run Autonomous Repair", show tests turning green, and review the post-fix trace.
-5. **cfo.ai Financial Plan (30s)**: Review the unit economics, 99.4% gross margin, and customer ROI.
-
----
 
 ## 📜 License & Acknowledgements
 
